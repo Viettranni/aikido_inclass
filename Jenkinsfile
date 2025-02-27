@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-repo.git'
+                git 'https://github.com/Viettranni/aikido_inclass.git'
             }
         }
         stage('Build') {
