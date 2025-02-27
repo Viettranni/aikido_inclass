@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Aikido.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">aikido</a> &gt; <a href="index.source.html" class="el_package">com.example</a> &gt; <span class="el_source">Aikido.java</span></div><h1>Aikido.java</h1><pre class="source lang-java linenums">package com.example;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+<span class="fc" id="L10">public class Aikido {</span>
+<span class="fc" id="L11">    private int kyuGraduation = 6; </span>
+<span class="fc" id="L12">    private int currentMonthAmount = 0;</span>
+<span class="fc" id="L13">    private int sessionAmount = 0;</span>
+    
+<span class="fc" id="L15">    private Map&lt;LocalDate, Integer&gt; sessions = new HashMap&lt;&gt;();</span>
+
+    public int getSessionAmount() {
+<span class="fc" id="L18">        return sessionAmount;</span>
+    }
+
+    public int getCurrentMonthAmount() {
+<span class="fc" id="L22">        return currentMonthAmount;</span>
+    }
+
+    public int getKyuGraduation() {
+<span class="fc" id="L26">        return kyuGraduation;</span>
+    }
+
+    public Map&lt;LocalDate, Integer&gt; getSessions() {
+<span class="fc" id="L30">        return sessions;</span>
+    }
+            
+    public void addSession(String sessionDate, Integer sessionDuration) {
+        // Increasing the sessionAmount for later check
+<span class="fc" id="L35">        sessionAmount += 1;</span>
+    
+        LocalDate parsedSessionDate;
+        try {
+<span class="fc" id="L39">            parsedSessionDate = LocalDate.parse(sessionDate, DateTimeFormatter.ISO_LOCAL_DATE);</span>
+<span class="fc" id="L40">        } catch (DateTimeParseException e) {</span>
+<span class="fc" id="L41">            System.out.println(&quot;Invalid date format. Please enter in YYYY-MM-DD format.&quot;);</span>
+<span class="fc" id="L42">            return;</span>
+<span class="fc" id="L43">        }</span>
+    
+        // Storing the parsed session date and duration in the sessions Map
+<span class="fc" id="L46">        sessions.put(parsedSessionDate, sessionDuration);</span>
+    
+        // Checking if the session is older than 6 months
+<span class="fc" id="L49">        LocalDate sixMonthsAgo = LocalDate.now().minusMonths(6);</span>
+    
+        // If the session date is older than 6 months, increment currentMonthAmount by 6
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (parsedSessionDate.isBefore(sixMonthsAgo)) {</span>
+<span class="fc" id="L53">            currentMonthAmount += 6; </span>
+        }
+    
+        // Printing session details
+<span class="fc" id="L57">        System.out.println(&quot;Session added: &quot; + parsedSessionDate + &quot; (&quot; + sessionDuration + &quot; minutes)&quot;);</span>
+<span class="fc" id="L58">    }</span>
+    
+    
+    public int getTotalTrainingTime() {
+<span class="fc" id="L62">        int totalTrainingTime = 0;</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (Map.Entry&lt;LocalDate, Integer&gt; entry : sessions.entrySet()) {</span>
+<span class="fc" id="L64">            totalTrainingTime += entry.getValue();</span>
+<span class="fc" id="L65">        }</span>
+<span class="fc" id="L66">        return totalTrainingTime;</span>
+    }
+    
+    public void checkGraduationEligibility() {
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (kyuGraduation &lt;= 1) {</span>
+<span class="fc" id="L71">            System.out.println(&quot;You already own the best belt! BLACK BELT!&quot;);</span>
+        }
+
+<span class="pc bpc" id="L74" title="1 of 4 branches missed.">        if (sessionAmount &gt;= 100 || currentMonthAmount == 6) {</span>
+<span class="fc" id="L75">            kyuGraduation -= 1;</span>
+<span class="fc" id="L76">            System.out.println(&quot;You are eligible for the new Belt! Your current level is &quot; + kyuGraduation);</span>
+<span class="fc" id="L77">            currentMonthAmount = 0;</span>
+<span class="fc" id="L78">            sessionAmount = 0;</span>
+        } else {
+<span class="fc" id="L80">            System.out.println(&quot;You are not eligible for belt upgrade! Keep gathering experience!&quot;);</span>
+        }
+<span class="fc" id="L82">    }</span>
+        
+    
+    public static void main(String[] args) {
+<span class="nc" id="L86">        Scanner scanner = new Scanner(System.in);</span>
+<span class="nc" id="L87">        Aikido aikido = new Aikido();</span>
+        
+        while (true) {
+<span class="nc" id="L90">            System.out.println(&quot;===== Aikido Practice Tracker =====\n&quot; + //</span>
+                                &quot;\n&quot; + //
+                                &quot;1. Add Practice Session\n&quot; + //
+                                &quot;2. View Total Practice Time\n&quot; + //
+                                &quot;3. Check Graduation Eligibility\n&quot; + //
+                                &quot;4. Exit Choose an option:&quot;);
+            
+<span class="nc" id="L97">            int answer = scanner.nextInt();</span>
+
+<span class="nc bnc" id="L99" title="All 5 branches missed.">            switch (answer) {</span>
+                case 1:
+                    // Get date input
+<span class="nc" id="L102">                    System.out.println(&quot;Please provide the date in YYYY-MM-DD form: &quot;);</span>
+<span class="nc" id="L103">                    scanner.nextLine();</span>
+<span class="nc" id="L104">                    String sessionDate = scanner.nextLine();</span>
+                    
+                    // Get duration input
+<span class="nc" id="L107">                    System.out.println(&quot;Please provide the duration in minutes: &quot;);</span>
+<span class="nc" id="L108">                    int sessionDuration = scanner.nextInt();</span>
+<span class="nc" id="L109">                    aikido.addSession(sessionDate, sessionDuration);</span>
+<span class="nc" id="L110">                    break;</span>
+        
+                case 2:
+<span class="nc" id="L113">                    int practiseTime = aikido.getTotalTrainingTime();</span>
+<span class="nc" id="L114">                    System.out.println(&quot;Total practise time is: &quot; + practiseTime);</span>
+<span class="nc" id="L115">                    break;</span>
+
+                case 3: 
+<span class="nc" id="L118">                    aikido.checkGraduationEligibility();</span>
+<span class="nc" id="L119">                    break;</span>
+                
+                case 4:
+<span class="nc" id="L122">                    System.out.println(&quot;Exiting program...&quot;);</span>
+<span class="nc" id="L123">                    scanner.close();</span>
+<span class="nc" id="L124">                    return;</span>
+            }
+<span class="nc" id="L126">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
